@@ -344,10 +344,20 @@ void QPropertyModel::addDynamicProperties( Property* parent, QObject* propertyOb
 
 void QPropertyModel::clear()
 {
-	beginRemoveRows(QModelIndex(), 0, rowCount());
-	delete m_rootItem;
-	m_rootItem = new Property("Root",0, this);   
-	endRemoveRows();
+	QModelIndex parent = QModelIndex();
+	int count = rowCount(parent);
+	if(count > 0)
+	{
+		beginRemoveRows(parent, 0, count - 1);
+		delete m_rootItem;
+		m_rootItem = new Property("Root", 0, this);
+		endRemoveRows();
+	}
+	else
+	{
+		delete m_rootItem;
+		m_rootItem = new Property("Root", 0, this);
+	}
 }
 
 void QPropertyModel::registerCustomPropertyCB(QPropertyEditorWidget::UserTypeCB callback)
